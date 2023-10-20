@@ -10,7 +10,7 @@ public class Rating
 
     [Required]
     [Range(0,5)]
-    public int Score { get; set; }
+    public float Score { get; set; }
 
     [Required]
     [ForeignKey("Restaurant")]
