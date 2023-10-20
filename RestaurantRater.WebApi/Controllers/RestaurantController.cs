@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RestaurantRater.WebApi.Data;
 
 namespace RestaurantRater.WebApi.Controllers;
@@ -51,6 +52,75 @@ public class RestaurantController : ControllerBase
         }
 
         return BadRequest(ModelState); // Otherwise it will return a Bad Reques (400) response
+    }
+
+    // Async PUT Endpoint
+    [HttpPut]
+    public async Task<IActionResult> PutRestaurant([FromBody] Restaurant request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        Restaurant? restaurant = await _context.Restaurants.FindAsync(request.Id);
+        if (restaurant is null)
+        {
+            return NotFound();
+        }
+
+        restaurant.Name = request.Name;
+        restaurant.Location = request.Location;
+
+        _context.Restaurants.Update(restaurant);
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+
+    // // Update Method
+    // [HttpPut]
+    // [Route("{id}")]
+    // public async Task<IActionResult> UpdateRestaurant([FromForm] RestaurantEdit model, [FromRoute] int id)
+    // {
+    //     // Retrieves requested Restaurant using Id parameter
+    //     var oldRestaurant = await _context.Restaurants.FindAsync(id);
+
+    //     if (oldRestaurant == null)
+    //     {
+    //         return NotFound();
+    //     }
+
+    //     if (ModelState.IsValid)
+    //     {
+    //         return BadRequest();
+    //     }
+
+    //     if (!string.IsNullOrEmpty(model.Name))
+    //     {
+    //         oldRestaurant.Name = model.Name;
+    //     }
+    //     if (!string.IsNullOrEmpty(model.Location))
+    //     {
+    //         oldRestaurant.Location = model.Location;
+    //     }
+
+    //     await _context.SaveChangesAsync();
+    //     return Ok();
+    // }
+
+    // Async DELETE Method
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteRestaurant([FromRoute] int id)
+    {
+        var restaurant = await _context.Restaurants.FindAsync(id);
+        if (restaurant == null)
+        {
+            return NotFound();
+        }
+
+        _context.Restaurants.Remove(restaurant);
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 }
 
