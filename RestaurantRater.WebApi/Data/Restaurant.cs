@@ -14,4 +14,23 @@ public class Restaurant
 
     [Required, MaxLength(100)] // Attributes can go in the same brackets.
     public string Location { get; set; } = string.Empty;
+
+    public virtual List<Rating> Ratings { get; set; } = new List<Rating>();
+
+    public float AverageRating
+    {
+        get
+        {
+            if (Ratings.Count == 0)
+            {
+                return 0;
+            }
+            float total = 0.0f;
+            foreach (Rating rating in Ratings)
+            {
+                total += rating.Score;
+            }
+            return total / Ratings.Count;
+        }
+    }
 }
