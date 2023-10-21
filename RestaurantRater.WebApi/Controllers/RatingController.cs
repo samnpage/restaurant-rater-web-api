@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RestaurantRater.WebApi.Data;
+using RestaurantRater.WebApi.Models;
 
 namespace RestaurantRater.WebApi.Controllers;
 
@@ -18,23 +20,23 @@ public class RatingController : Controller
         _context = context;
     }
 
-    // [HttpPost]
-    // public async Task<IActionResult> RateRestaurant([FromForm] RatingEdit model)
-    // {
+    [HttpPost]
+    public async Task<IActionResult> RateRestaurant([FromForm] RatingEdit model)
+    {
 
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return BadRequest(ModelState);
-    //     }
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
 
-    //     _context.Ratings.Add(new Rating() {
-    //         Score = model.Score,
-    //         RestaurantId = model.RestaurantId,
-    //     });
+        _context.Ratings.Add(new Rating() {
+            Score = model.Score,
+            RestaurantId = model.RestaurantId,
+        });
 
-    //     await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
-    //     return Ok();
-    // }
+        return Ok();
+    }
 
 }
